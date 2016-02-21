@@ -11,18 +11,50 @@
     tools:context=".UI.LoginActivity">
 
     <Button
-        android:id="@+id/btnLogin"
+        android:id="@+id/button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/selecter_add_account" />
+
+    <LinearLayout
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="74dp">
+
+
+        <ImageView
+            android:id="@+id/img_user_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img_user_head" />
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/spinner_users"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnLogin"
+        android:layout_alignEnd="@+id/btnLogin"
+        android:layout_alignStart="@+id/btnLogin" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="New Button" />
+        android:text="@string/weibo_login"
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/tvShow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:text="New Text" />
+
 </RelativeLayout>

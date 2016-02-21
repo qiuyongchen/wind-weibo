@@ -34,8 +34,14 @@ public class LoginActivity extends Activity implements BaseActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // 给逻辑层传去一个登录任务
                 Task task = new Task(Task.LOGIN_WEIBO, null);
-                MainService.newTask(task);
+                // MainService.newTask(task);
+
+                Intent intent = new Intent(LoginActivity.this, WebViewActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 

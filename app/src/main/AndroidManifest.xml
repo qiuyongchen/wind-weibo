@@ -9,10 +9,10 @@
         android:supportsRtl="true">
         <activity
             android:name=".UI.LoginActivity"
-            android:theme="@style/theme_no_title" />
+            android:theme="@style/theme_no_action_bar" />
         <activity
             android:name=".UI.LogoActivity"
-            android:theme="@style/theme_full_screen">
+            android:theme="@style/theme_full_screen_material">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,6 +24,12 @@
             android:name=".logic.MainService"
             android:enabled="true"
             android:exported="true" />
+
+        <activity
+            android:name=".UI.WebViewActivity"
+            android:theme="@style/theme_no_action_bar" />
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

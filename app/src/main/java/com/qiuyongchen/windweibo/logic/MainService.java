@@ -28,7 +28,6 @@ public class MainService extends Service implements Runnable {
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
 
             switch (msg.what) {
                 case Task.LOGIN_WEIBO:
