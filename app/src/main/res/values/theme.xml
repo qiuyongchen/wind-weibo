@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--全屏主题，没有状态栏和标题栏-->
+    <style name="theme_full_screen" parent="android:Theme.Black">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">?android:windowNoTitle</item>
+    </style>
+
+    <!--没有标题栏-->
+    <style name="theme_no_title" parent="android:Theme.Black">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>
