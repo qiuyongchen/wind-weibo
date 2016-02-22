@@ -49,6 +49,15 @@
         android:text="@string/weibo_login"
         android:textColor="@color/black" />
 
+    <!-- 默认效果，带图片文字的登陆按钮 -->
+    <com.sina.weibo.sdk.widget.LoginButton
+        android:id="@+id/btnLoginDefault"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnLogin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp" />
+
     <TextView
         android:id="@+id/tvShow"
         android:layout_width="wrap_content"

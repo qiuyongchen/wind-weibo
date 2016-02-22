@@ -98,8 +98,8 @@ public class MainService extends Service implements Runnable {
         }
 
         try {
-            // 让MainService睡眠0.5s，免得过于频繁导致系统卡塞
-            Thread.sleep(500);
+            // 让MainService睡眠2s，免得过于频繁导致系统卡塞
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

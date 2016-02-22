@@ -2,4 +2,11 @@
     <string name="app_name">wind-weibo</string>
     <string name="weibo_login">登录</string>
     <string name="weibo_add_account">添加</string>
+
+    <!-- 微博登陆部分 -->
+    <string name="weibosdk_demo_token_to_string_format_1">Token：%1$s \n有效期：%2$s</string>
+    <string name="weibosdk_demo_toast_auth_canceled">取消授权</string>
+    <string name="weibosdk_demo_logout_success">已注销</string>
+    <string name="weibosdk_demo_logout_failed">注销失败</string>
+
 </resources>
