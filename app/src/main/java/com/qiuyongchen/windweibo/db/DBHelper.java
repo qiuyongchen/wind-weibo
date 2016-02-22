@@ -11,16 +11,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context) {
-        super(context, DBInfo.DB.DB_NAME, null, DBInfo.DB.DB_VERSION);
+        super(context, DBinfo.DB.DB_NAME, null, DBinfo.DB.DB_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(DBInfo.TABLE.CREATE_USER_INFO_TABLE);
+        db.execSQL(DBinfo.TABLE.CREATE_USER_INFO_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(DBInfo.TABLE.USER_INFO_DROP);
+        db.execSQL(DBinfo.TABLE.USER_INFO_DROP);
     }
 }
