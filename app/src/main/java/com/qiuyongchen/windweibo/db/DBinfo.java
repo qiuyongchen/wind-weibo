@@ -19,7 +19,7 @@ public class DBinfo {
     public static class TABLE {
 
         // 用户信息表的名字
-        private static final String USER_INFO_TB_NAME = "user_info";
+        public static final String USER_INFO_TB_NAME = "user_info";
 
         // 创建用户信息表
         public static String CREATE_USER_INFO_TABLE = "CREATE TABLE IF NOT EXISTS  " +

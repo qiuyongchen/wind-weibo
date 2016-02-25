@@ -3,16 +3,23 @@ package com.qiuyongchen.windweibo.logic;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
 import com.qiuyongchen.windweibo.UI.BaseActivity;
+import com.qiuyongchen.windweibo.Util.NetUtil;
 import com.qiuyongchen.windweibo.bean.Task;
+import com.qiuyongchen.windweibo.db_services.UserInfoServices;
+import com.sina.weibo.sdk.openapi.models.User;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 
 public class MainService extends Service implements Runnable {
@@ -30,11 +37,43 @@ public class MainService extends Service implements Runnable {
         public void handleMessage(Message msg) {
 
             switch (msg.what) {
+
                 case Task.LOGIN_WEIBO:
+                    break;
+
+                case Task.AUTH_WEIBO:
+                    Map<String, Object> map = (Map<String, Object>) msg.obj;
+                    final User user = (User) map.get("User");
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (user != null) {
+                                try {
+                                    // 获取头像地址
+                                    URL url = new URL(user.profile_image_url);
+
+                                    // 将Drawable转为Bitmap
+                                    BitmapDrawable bitmapDrawable = (BitmapDrawable) NetUtil.getDrawable(url);
+
+                                    UserInfoServices userInfoServices = new UserInfoServices(getApplicationContext());
+
+                                    // 更新数据库中用户的昵称和头像
+                                    userInfoServices.updateUser(user.id, user.screen_name, bitmapDrawable.getBitmap());
+
+                                } catch (MalformedURLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+
+                        }
+                    }).start();
+
                     BaseActivity loginActivity = (BaseActivity) getActivity("LoginActivity");
                     if (loginActivity != null) {
                         loginActivity.refresh();
                     }
+
                     break;
             }
         }
@@ -95,14 +134,14 @@ public class MainService extends Service implements Runnable {
                 doTask(task);
             }
 
+            try {
+                // 让MainService睡眠2s，免得过于频繁导致系统卡塞
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
-        try {
-            // 让MainService睡眠2s，免得过于频繁导致系统卡塞
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -118,6 +157,10 @@ public class MainService extends Service implements Runnable {
             case Task.LOGIN_WEIBO:
                 Log.e("MainService", "doTask LOGIN_WEIBO");
                 message.obj = "doTask LOGIN_WEIBO";
+                break;
+            case Task.AUTH_WEIBO:
+                Log.e("MainService", "doTask AUTH_WEIBO");
+                message.obj = task.getTaskParams();
                 break;
         }
 

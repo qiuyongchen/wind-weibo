@@ -10,36 +10,49 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".UI.LoginActivity">
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+    <!-- 默认效果，带图片文字的登陆按钮 -->
+    <com.sina.weibo.sdk.widget.LoginButton
+        android:id="@+id/btnLoginDefault"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/selecter_add_account" />
+        android:layout_alignParentTop="true" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="74dp">
 
-
+        <!-- 用户头像 -->
         <ImageView
             android:id="@+id/img_user_head"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:src="@drawable/img_user_head" />
     </LinearLayout>
 
-    <Spinner
-        android:id="@+id/spinner_users"
+    <EditText
+        android:id="@+id/editTextName"
+        style="@android:style/TextAppearance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnLogin"
-        android:layout_alignEnd="@+id/btnLogin"
-        android:layout_alignStart="@+id/btnLogin" />
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/btnMore"
+        android:editable="false" />
 
+    <!-- 点击弹出用户列表 -->
+    <Button
+        android:id="@+id/btnMore"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_above="@+id/btnLogin"
+        android:layout_alignEnd="@+id/btnLogin"
+        android:background="@drawable/selecter_arrow_more" />
+
+    <!-- 登录按钮 -->
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
@@ -49,14 +62,6 @@
         android:text="@string/weibo_login"
         android:textColor="@color/black" />
 
-    <!-- 默认效果，带图片文字的登陆按钮 -->
-    <com.sina.weibo.sdk.widget.LoginButton
-        android:id="@+id/btnLoginDefault"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/btnLogin"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="22dp" />
 
     <TextView
         android:id="@+id/tvShow"
@@ -65,5 +70,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
         android:text="New Text" />
+
 
 </RelativeLayout>

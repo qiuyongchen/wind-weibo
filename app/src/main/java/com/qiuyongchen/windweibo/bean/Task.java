@@ -1,7 +1,6 @@
 package com.qiuyongchen.windweibo.bean;
 
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * 任务
@@ -11,11 +10,14 @@ public class Task {
 
     // 登录微博
     public static final int LOGIN_WEIBO = 1;
+    // 成功授权微博
+    public static final int AUTH_WEIBO = 2;
+
     private int taskID;
-    private Map<String, Objects> taskParams;
+    private Map<String, Object> taskParams;
 
 
-    public Task(int taskID, Map<String, Objects> taskParams) {
+    public Task(int taskID, Map<String, Object> taskParams) {
         this.taskID = taskID;
         this.taskParams = taskParams;
     }
@@ -28,11 +30,11 @@ public class Task {
         this.taskID = taskID;
     }
 
-    public Map<String, Objects> getTaskParams() {
+    public Map<String, Object> getTaskParams() {
         return taskParams;
     }
 
-    public void setTaskParams(Map<String, Objects> taskParams) {
+    public void setTaskParams(Map<String, Object> taskParams) {
         this.taskParams = taskParams;
     }
 }

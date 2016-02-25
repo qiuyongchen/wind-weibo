@@ -7,7 +7,15 @@ import android.graphics.drawable.Drawable;
  * Created by qiuyongchen on 2016/2/22.
  */
 public class UserInfo {
-    private int _id;
+    public static String ID = "_id";
+    public static String UID = "uid";
+    public static String USER_NAME = "user_name";
+    public static String ACCESS_TOKEN = "access_token";
+    public static String EXPIRES_IN = "expires_in";
+    public static String REFRESH_TOKEN = "refresh_token";
+    public static String IS_DEFAULT = "isDefault";
+    public static String USER_ICON = "user_icon";
+    private long _id;
     private String uid;
     private String user_name;
     private String access_token;
@@ -16,11 +24,41 @@ public class UserInfo {
     private String isDefault;
     private Drawable user_icon;
 
-    public int get_id() {
+    public UserInfo(String uid, String user_name, String access_token, String expires_in, String refresh_token, String isDefault) {
+        this.uid = uid;
+        this.user_name = user_name;
+        this.access_token = access_token;
+        this.expires_in = expires_in;
+        this.refresh_token = refresh_token;
+        this.isDefault = isDefault;
+    }
+
+    public UserInfo(long _id, String uid, String user_name, String access_token, String expires_in, String refresh_token, String isDefault) {
+        this._id = _id;
+        this.uid = uid;
+        this.user_name = user_name;
+        this.access_token = access_token;
+        this.expires_in = expires_in;
+        this.refresh_token = refresh_token;
+        this.isDefault = isDefault;
+    }
+
+    public UserInfo(long _id, String uid, String user_name, String access_token, String expires_in, String refresh_token, String isDefault, Drawable user_icon) {
+        this._id = _id;
+        this.uid = uid;
+        this.user_name = user_name;
+        this.access_token = access_token;
+        this.expires_in = expires_in;
+        this.refresh_token = refresh_token;
+        this.isDefault = isDefault;
+        this.user_icon = user_icon;
+    }
+
+    public long get_id() {
         return _id;
     }
 
-    public void set_id(int _id) {
+    public void set_id(long _id) {
         this._id = _id;
     }
 
