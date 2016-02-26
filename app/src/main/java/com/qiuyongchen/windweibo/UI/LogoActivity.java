@@ -23,7 +23,7 @@ public class LogoActivity extends Activity {
 
         // 利用动画实现图像透明度的渐变
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
-        alphaAnimation.setDuration(3000);
+        alphaAnimation.setDuration(2000);
         alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {

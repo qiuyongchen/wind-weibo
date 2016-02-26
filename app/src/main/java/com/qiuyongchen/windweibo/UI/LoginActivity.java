@@ -41,41 +41,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.qiuyongchen.windweibo.weibo.AccessTokenKeeper.readAccessToken;
+
 /**
  * @author qiuyongchen
  */
 public class LoginActivity extends Activity implements BaseActivity {
 
     private TextView tvShow;
-
     // 用户头像
     private ImageView imageViewHead;
-
     // 用户昵称
     private EditText editTextUserName;
-
     private Button btnMore;
-
     private LoginButton btnLoginDefault;
+    // 登录按钮
+    private Button btnLogin;
 
+    // 记录新浪登录所需的APPKEY(开发者应用信息)
+    private AuthInfo mAuthInfo;
+    // 用户信息接口(用户信息)
+    private UsersAPI mUsersAPI;
+    // 授权信息(access_token)
+    private Oauth2AccessToken accessToken;
     private UserInfoServices userInfoServices;
 
     //  登陆认证对应的listener
     private AuthListener mLoginListener = new AuthListener();
-
     // 登出操作对应的listener
     private LogOutRequestListener mLogoutListener = new LogOutRequestListener();
-
-    // 记录新浪登录所需的APPKEY
-    private AuthInfo mAuthInfo;
-
-    /**
-     * 用户信息接口
-     */
-    private UsersAPI mUsersAPI;
-    /**
-     * 微博 OpenAPI 回调接口。
-     */
+    // 微博 OpenAPI 回调接口。
     private RequestListener requestListener = new RequestListener() {
         @Override
         public void onComplete(final String response) {
@@ -97,13 +92,22 @@ public class LoginActivity extends Activity implements BaseActivity {
         public void onWeiboException(WeiboException e) {
             LogUtil.e("LoginActivity", e.getMessage());
             ErrorInfo info = ErrorInfo.parse(e.getMessage());
-            Toast.makeText(LoginActivity.this, info.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, info != null ? info.toString() : null, Toast.LENGTH_LONG).show();
         }
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // 如果已经有用户登录过，那就自动登录
+        accessToken = readAccessToken(getApplicationContext());
+        if (!accessToken.getUid().equals("UID is not exists")) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
         setContentView(R.layout.activity_login);
 
         tvShow = (TextView) findViewById(R.id.tvShow);
@@ -111,11 +115,16 @@ public class LoginActivity extends Activity implements BaseActivity {
         editTextUserName = (EditText) findViewById(R.id.editTextName);
         btnMore = (Button) findViewById(R.id.btnMore);
         btnLoginDefault = (LoginButton) findViewById(R.id.btnLoginDefault);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
 
         // 创建授权认证信息
         mAuthInfo = new AuthInfo(this, Constants.APP_KEY, Constants.REDIRECT_URL, Constants.SCOPE);
 
+        // 微博授权按钮监听器
         btnLoginDefault.setWeiboAuthInfo(mAuthInfo, mLoginListener);
+
+        // 登录按钮监听器
+        btnLogin.setOnClickListener(new btnLoginOnClickListener());
 
         // 启动Mainservice
         Intent intent = new Intent(LoginActivity.this, MainService.class);
@@ -125,7 +134,6 @@ public class LoginActivity extends Activity implements BaseActivity {
         MainService.addActivity(this);
 
         init();
-
 
     }
 
@@ -153,14 +161,12 @@ public class LoginActivity extends Activity implements BaseActivity {
     private class AuthListener implements WeiboAuthListener {
         @Override
         public void onComplete(Bundle values) {
-            Oauth2AccessToken accessToken = Oauth2AccessToken.parseAccessToken(values);
+            accessToken = Oauth2AccessToken.parseAccessToken(values);
             if (accessToken != null && accessToken.isSessionValid()) {
                 String date = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(
                         new java.util.Date(accessToken.getExpiresTime()));
                 String format = getString(R.string.weibosdk_demo_token_to_string_format_1);
                 tvShow.setText(String.format(format, accessToken.getToken(), date));
-
-                AccessTokenKeeper.writeAccessToken(getApplicationContext(), accessToken);
 
                 // 如果数据库中还没有这个用户，就将用户保存起来，并下载用户头像
                 UserInfo userInfo = new UserInfo(accessToken.getUid(), accessToken.getUid(),
@@ -250,6 +256,26 @@ public class LoginActivity extends Activity implements BaseActivity {
                     dialog.dismiss();
                 }
             });
+        }
+    }
+
+    /**
+     * 点击按钮，将会保存当前登录用户，并跳转到主界面
+     */
+    private class btnLoginOnClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            AccessTokenKeeper.writeAccessToken(getApplicationContext(), accessToken);
+
+            Map<String, Object> map = new HashMap<>();
+            map.put("accessToken", accessToken);
+            Task task = new Task(Task.LOGIN_WEIBO, map);
+            MainService.newTask(task);
+
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 }

@@ -69,7 +69,7 @@ public class AccessTokenKeeper {
 
         Oauth2AccessToken token = new Oauth2AccessToken();
         SharedPreferences pref = context.getSharedPreferences(PREFERENCES_NAME, Context.MODE_APPEND);
-        token.setUid(pref.getString(KEY_UID, ""));
+        token.setUid(pref.getString(KEY_UID, "UID is not exists"));
         token.setToken(pref.getString(KEY_ACCESS_TOKEN, ""));
         token.setRefreshToken(pref.getString(KEY_REFRESH_TOKEN, ""));
         token.setExpiresTime(pref.getLong(KEY_EXPIRES_IN, 0));

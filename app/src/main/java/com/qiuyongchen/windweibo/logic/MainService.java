@@ -13,25 +13,24 @@ import com.qiuyongchen.windweibo.UI.BaseActivity;
 import com.qiuyongchen.windweibo.Util.NetUtil;
 import com.qiuyongchen.windweibo.bean.Task;
 import com.qiuyongchen.windweibo.db_services.UserInfoServices;
+import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.openapi.models.User;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 public class MainService extends Service implements Runnable {
 
+    // 用户授权信息（全局资料）
+    private static Oauth2AccessToken accessToken;
     // 任务队列
     private static Queue<Task> tasks = new LinkedList<>();
-
     // UI集合
     private static ArrayList<Activity> activities = new ArrayList<>();
-    /**
-     * 在UI线程中处理任务
-     */
+    // 在UI线程中处理任务
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -42,32 +41,6 @@ public class MainService extends Service implements Runnable {
                     break;
 
                 case Task.AUTH_WEIBO:
-                    Map<String, Object> map = (Map<String, Object>) msg.obj;
-                    final User user = (User) map.get("User");
-
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (user != null) {
-                                try {
-                                    // 获取头像地址
-                                    URL url = new URL(user.profile_image_url);
-
-                                    // 将Drawable转为Bitmap
-                                    BitmapDrawable bitmapDrawable = (BitmapDrawable) NetUtil.getDrawable(url);
-
-                                    UserInfoServices userInfoServices = new UserInfoServices(getApplicationContext());
-
-                                    // 更新数据库中用户的昵称和头像
-                                    userInfoServices.updateUser(user.id, user.screen_name, bitmapDrawable.getBitmap());
-
-                                } catch (MalformedURLException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-
-                        }
-                    }).start();
 
                     BaseActivity loginActivity = (BaseActivity) getActivity("LoginActivity");
                     if (loginActivity != null) {
@@ -78,6 +51,7 @@ public class MainService extends Service implements Runnable {
             }
         }
     };
+
     // 任务是否在执行
     private boolean isRunning;
 
@@ -135,8 +109,8 @@ public class MainService extends Service implements Runnable {
             }
 
             try {
-                // 让MainService睡眠2s，免得过于频繁导致系统卡塞
-                Thread.sleep(1000);
+                // 让MainService睡眠，免得过于频繁导致系统卡塞
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -156,11 +130,42 @@ public class MainService extends Service implements Runnable {
         switch (task.getTaskID()) {
             case Task.LOGIN_WEIBO:
                 Log.e("MainService", "doTask LOGIN_WEIBO");
+
+                accessToken = (Oauth2AccessToken) task.getTaskParams().get("accessToken");
+
                 message.obj = "doTask LOGIN_WEIBO";
                 break;
+
+            // 得到授权信息后，进一步获取用户昵称和头像等信息
             case Task.AUTH_WEIBO:
                 Log.e("MainService", "doTask AUTH_WEIBO");
-                message.obj = task.getTaskParams();
+
+                final User user = (User) task.getTaskParams().get("User");
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (user != null) {
+                            try {
+                                // 获取头像地址
+                                URL url = new URL(user.profile_image_url);
+
+                                // 将Drawable转为Bitmap
+                                BitmapDrawable bitmapDrawable = (BitmapDrawable) NetUtil.getDrawable(url);
+
+                                UserInfoServices userInfoServices = new UserInfoServices(getApplicationContext());
+
+                                // 更新数据库中用户的昵称和头像
+                                userInfoServices.updateUser(user.id, user.screen_name, bitmapDrawable.getBitmap());
+
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+                }).start();
+
                 break;
         }
 
