@@ -12,6 +12,8 @@ public class Task {
     public static final int LOGIN_WEIBO = 1;
     // 成功授权微博
     public static final int AUTH_WEIBO = 2;
+    // 获取当前登录用户及其所关注用户的最新微博
+    public static final int FRIENDS_TIMELINE = 3;
 
     private int taskID;
     private Map<String, Object> taskParams;

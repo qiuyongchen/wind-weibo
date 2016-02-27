@@ -8,6 +8,14 @@
     <string name="message">消息</string>
     <string name="setting">设置</string>
 
+    <string name="loading">正在刷新…</string>
+
+    <string name="weibo_status_user_name">用户名</string>
+    <string name="weibo_status_content">忘记所有的不愉快，迎接全新的自己 [嘻嘻][嘻嘻]</string>
+    <string name="weibo_status_time">1小时前</string>
+    <string name="weibo_status_item_from">来自疾风微博</string>
+
+
     <!-- 微博登陆部分 -->
     <string name="weibosdk_demo_token_to_string_format_1">Token：%1$s \n有效期：%2$s</string>
     <string name="weibosdk_demo_toast_auth_canceled">取消授权</string>

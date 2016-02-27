@@ -22,10 +22,16 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import static com.qiuyongchen.windweibo.weibo.AccessTokenKeeper.readAccessToken;
+
 public class MainService extends Service implements Runnable {
 
     // 用户授权信息（全局资料）
-    private static Oauth2AccessToken accessToken;
+    public static Oauth2AccessToken accessToken;
+    // 用户昵称地址等信息（全局资料）
+    public static User user;
+
+
     // 任务队列
     private static Queue<Task> tasks = new LinkedList<>();
     // UI集合
@@ -77,6 +83,8 @@ public class MainService extends Service implements Runnable {
     public void onCreate() {
 
         isRunning = true;
+
+        accessToken = readAccessToken(getApplicationContext());
 
         // Mainservice一开启就把自身加入线程，在UI线程之外独立运行
         Thread thread = new Thread(this);
@@ -140,7 +148,7 @@ public class MainService extends Service implements Runnable {
             case Task.AUTH_WEIBO:
                 Log.e("MainService", "doTask AUTH_WEIBO");
 
-                final User user = (User) task.getTaskParams().get("User");
+                user = (User) task.getTaskParams().get("User");
 
                 new Thread(new Runnable() {
                     @Override
@@ -165,6 +173,12 @@ public class MainService extends Service implements Runnable {
 
                     }
                 }).start();
+                break;
+
+            // 得到授权信息后，进一步获取用户昵称和头像等信息
+            case Task.FRIENDS_TIMELINE:
+                Log.e("MainService", "doTask FRIENDS_TIMELINE");
+
 
                 break;
         }

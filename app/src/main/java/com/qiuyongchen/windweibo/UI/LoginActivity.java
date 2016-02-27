@@ -100,11 +100,18 @@ public class LoginActivity extends Activity implements BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // 启动Mainservice
+        Intent intent = new Intent(LoginActivity.this, MainService.class);
+        startService(intent);
+
+        // 把当前UI加到Mainservice的UI集合中
+        MainService.addActivity(this);
+
         // 如果已经有用户登录过，那就自动登录
         accessToken = readAccessToken(getApplicationContext());
-        if (!accessToken.getUid().equals("UID is not exists")) {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
+        if (accessToken.getUid().equals("UID is not exists")) {
+            Intent intent2 = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent2);
             finish();
         }
 
@@ -126,12 +133,7 @@ public class LoginActivity extends Activity implements BaseActivity {
         // 登录按钮监听器
         btnLogin.setOnClickListener(new btnLoginOnClickListener());
 
-        // 启动Mainservice
-        Intent intent = new Intent(LoginActivity.this, MainService.class);
-        startService(intent);
 
-        // 把当前UI加到Mainservice的UI集合中
-        MainService.addActivity(this);
 
         init();
 
