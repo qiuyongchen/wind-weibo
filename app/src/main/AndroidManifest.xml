@@ -30,7 +30,6 @@
             android:enabled="true"
             android:exported="true" />
 
-
         <!-- 必须注册在微博授权，分享微博时候用到 -->
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
@@ -58,6 +57,10 @@
         <activity
             android:name=".UI.MainActivity"
             android:theme="@style/theme_no_action_bar" />
+        <activity android:name=".UI.HomeActivity" />
+        <activity android:name=".UI.AtActivity" />
+        <activity android:name=".UI.MessageActivity" />
+        <activity android:name=".UI.SettingActivity"></activity>
     </application>
 
 </manifest>
