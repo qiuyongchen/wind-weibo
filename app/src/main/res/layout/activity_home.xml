@@ -14,12 +14,16 @@
         android:id="@+id/lv_weibo_status"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
         android:layout_below="@+id/layout_title" />
 
     <include
         android:id="@+id/layout_progress_refresh"
-        layout="@layout/layout_progress_refresh">
-
+        layout="@layout/layout_progress_refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
     </include>
 
 

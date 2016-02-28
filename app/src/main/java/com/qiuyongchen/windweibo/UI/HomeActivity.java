@@ -3,6 +3,7 @@ package com.qiuyongchen.windweibo.UI;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -10,6 +11,7 @@ import com.qiuyongchen.windweibo.R;
 import com.qiuyongchen.windweibo.adapter.WeiboStatusAdapter;
 import com.qiuyongchen.windweibo.bean.Task;
 import com.qiuyongchen.windweibo.logic.MainService;
+import com.sina.weibo.sdk.openapi.models.Status;
 import com.sina.weibo.sdk.openapi.models.StatusList;
 
 /**
@@ -18,10 +20,8 @@ import com.sina.weibo.sdk.openapi.models.StatusList;
  */
 public class HomeActivity extends Activity implements BaseActivity {
     private ListView listView;
-    private View progress;
+    private LinearLayout progress;
     private View textView;
-
-
 
     // 微博列表适配器
     private WeiboStatusAdapter weiboStatusAdapter;
@@ -38,7 +38,7 @@ public class HomeActivity extends Activity implements BaseActivity {
     @Override
     public void init() {
         listView = (ListView) findViewById(R.id.lv_weibo_status);
-        progress = findViewById(R.id.layout_progress_refresh);
+        progress = (LinearLayout) findViewById(R.id.layout_progress_refresh);
         textView = findViewById(R.id.layout_title);
 
         // 显示用户昵称
@@ -51,16 +51,21 @@ public class HomeActivity extends Activity implements BaseActivity {
 
     @Override
     public void refresh(Object... params) {
-        Toast.makeText(getApplicationContext(),
-                "获取微博信息流成功, 条数: " + ((StatusList) params[0]).statusList.size(),
-                Toast.LENGTH_LONG).show();
 
         // 刷新微博列表
         weiboStatusAdapter = new WeiboStatusAdapter(HomeActivity.this, ((StatusList) params[0]).statusList);
 
+        Toast.makeText(HomeActivity.this,
+                ((Status) weiboStatusAdapter.getItem(1)).text,
+                Toast.LENGTH_LONG).show();
+
         listView.setAdapter(weiboStatusAdapter);
 
         progress.setVisibility(View.GONE);
+
+        Toast.makeText(HomeActivity.this,
+                "获取微博信息流成功, 条数: " + ((StatusList) params[0]).statusList.size(),
+                Toast.LENGTH_LONG).show();
     }
 
     // 异步获取最新微博
