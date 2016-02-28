@@ -121,6 +121,13 @@ public class MainService extends Service implements Runnable {
     }
 
     /**
+     * 清除过期的Activity
+     */
+    public static void clearExpireActivity() {
+        activities.clear();
+    }
+
+    /**
      * 把Activity加到集合中
      *
      * @param activity 待添加的UI

@@ -104,6 +104,9 @@ public class LoginActivity extends Activity implements BaseActivity {
         Intent intent = new Intent(LoginActivity.this, MainService.class);
         startService(intent);
 
+        // 每次重新运行的时候都清掉报废的activity
+        MainService.clearExpireActivity();
+
         // 把当前UI加到Mainservice的UI集合中
         MainService.addActivity(this);
 
