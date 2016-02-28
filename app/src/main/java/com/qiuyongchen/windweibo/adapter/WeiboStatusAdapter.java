@@ -1,6 +1,7 @@
 package com.qiuyongchen.windweibo.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +39,8 @@ public class WeiboStatusAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return statuses == null ? 0 : Long.valueOf(statuses.get(position).id);
+        return position;
+        // return statuses == null ? 0 : Long.valueOf(statuses.get(position).);
     }
 
     @Override
@@ -47,15 +49,19 @@ public class WeiboStatusAdapter extends BaseAdapter {
 
         if (view == null) {
             view = LayoutInflater.from(context).inflate(R.layout.listview_item_weibo_status, null);
-
-            TextView userName = (TextView) view.findViewById(R.id.txt_wb_item_uname);
-            TextView statusContent = (TextView) view.findViewById(R.id.txt_wb_item_content);
-
-            Status status = statuses.get(position);
-
-            userName.setText(status.user.screen_name);
-            statusContent.setText(status.text);
+        } else {
+            Log.e("WeiboStatusAdapter", String.valueOf(((TextView) view.findViewById(R.id.txt_wb_item_content)).getText()));
         }
+
+        TextView userName = (TextView) view.findViewById(R.id.txt_wb_item_uname);
+        TextView statusContent = (TextView) view.findViewById(R.id.txt_wb_item_content);
+
+        Status status = statuses.get(position);
+
+        userName.setText(status.user.screen_name);
+        statusContent.setText(status.text);
+
+        Log.e("WeiboStatusAdapter", String.valueOf(((TextView) view.findViewById(R.id.txt_wb_item_uname)).getText()));
 
         return view;
     }

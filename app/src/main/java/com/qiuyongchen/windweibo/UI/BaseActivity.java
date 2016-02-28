@@ -8,6 +8,6 @@ public interface BaseActivity {
 
     void init();
 
-    void refresh();
+    void refresh(Object... params);
 
 }

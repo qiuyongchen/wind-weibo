@@ -109,7 +109,7 @@ public class LoginActivity extends Activity implements BaseActivity {
 
         // 如果已经有用户登录过，那就自动登录
         accessToken = readAccessToken(getApplicationContext());
-        if (accessToken.getUid().equals("UID is not exists")) {
+        if (!accessToken.getUid().equals("UID is not exists")) {
             Intent intent2 = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent2);
             finish();
@@ -133,8 +133,6 @@ public class LoginActivity extends Activity implements BaseActivity {
         // 登录按钮监听器
         btnLogin.setOnClickListener(new btnLoginOnClickListener());
 
-
-
         init();
 
     }
@@ -151,7 +149,7 @@ public class LoginActivity extends Activity implements BaseActivity {
     }
 
     @Override
-    public void refresh() {
+    public void refresh(Object... params) {
         tvShow.setText("头像和昵称已更新...");
         btnMore.setOnClickListener(new btnMoreOnClickListener());
     }

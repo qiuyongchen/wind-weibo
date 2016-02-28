@@ -7,13 +7,22 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.qiuyongchen.windweibo.UI.BaseActivity;
 import com.qiuyongchen.windweibo.Util.NetUtil;
 import com.qiuyongchen.windweibo.bean.Task;
 import com.qiuyongchen.windweibo.db_services.UserInfoServices;
+import com.qiuyongchen.windweibo.weibo.Constants;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
+import com.sina.weibo.sdk.exception.WeiboException;
+import com.sina.weibo.sdk.net.RequestListener;
+import com.sina.weibo.sdk.openapi.StatusesAPI;
+import com.sina.weibo.sdk.openapi.models.ErrorInfo;
+import com.sina.weibo.sdk.openapi.models.Status;
+import com.sina.weibo.sdk.openapi.models.StatusList;
 import com.sina.weibo.sdk.openapi.models.User;
 
 import java.net.MalformedURLException;
@@ -30,7 +39,8 @@ public class MainService extends Service implements Runnable {
     public static Oauth2AccessToken accessToken;
     // 用户昵称地址等信息（全局资料）
     public static User user;
-
+    // 用于获取微博信息流等操作的API
+    private static StatusesAPI mStatusesAPI;
 
     // 任务队列
     private static Queue<Task> tasks = new LinkedList<>();
@@ -54,7 +64,47 @@ public class MainService extends Service implements Runnable {
                     }
 
                     break;
+                case Task.FRIENDS_TIMELINE:
+                    BaseActivity homeActivity = (BaseActivity) getActivity("HomeActivity");
+                    if (homeActivity != null) {
+                        homeActivity.refresh(msg.obj);
+                    }
+                    break;
             }
+        }
+    };
+
+    /**
+     * 微博获取最新微博 OpenAPI 回调接口。
+     */
+    private RequestListener friendsTimeLineListener = new RequestListener() {
+        @Override
+        public void onComplete(String response) {
+            if (!TextUtils.isEmpty(response)) {
+                if (response.startsWith("{\"statuses\"")) {
+                    // 调用 StatusList#parse 解析字符串成微博列表对象
+                    StatusList statuses = StatusList.parse(response);
+                    if (statuses != null && statuses.total_number > 0) {
+
+                        Message message = handler.obtainMessage();
+                        message.what = Task.FRIENDS_TIMELINE;
+                        message.obj = statuses;
+                        handler.sendMessage(message);
+                    }
+
+                } else if (response.startsWith("{\"created_at\"")) {
+                    // 调用 Status#parse 解析字符串成微博对象
+                    Status status = Status.parse(response);
+
+                } else {
+                    Toast.makeText(getApplicationContext(), response, Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
+        @Override
+        public void onWeiboException(WeiboException e) {
+            ErrorInfo info = ErrorInfo.parse(e.getMessage());
         }
     };
 
@@ -175,12 +225,14 @@ public class MainService extends Service implements Runnable {
                 }).start();
                 break;
 
-            // 得到授权信息后，进一步获取用户昵称和头像等信息
             case Task.FRIENDS_TIMELINE:
                 Log.e("MainService", "doTask FRIENDS_TIMELINE");
 
+                // 对statusAPI实例化
+                mStatusesAPI = new StatusesAPI(this, Constants.APP_KEY, accessToken);
+                mStatusesAPI.friendsTimeline(0L, 0L, 20, 1, false, 0, false, friendsTimeLineListener);
 
-                break;
+                return;
         }
 
         handler.sendMessage(message);
@@ -205,4 +257,6 @@ public class MainService extends Service implements Runnable {
 
         return null;
     }
+
+
 }
