@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.qiuyongchen.windweibo.R;
+import com.qiuyongchen.windweibo.imgcache.ImgLoader;
 import com.sina.weibo.sdk.openapi.models.Status;
 
 import java.util.ArrayList;
@@ -26,10 +27,12 @@ public class WeiboStatusAdapter extends BaseAdapter {
 
     private ArrayList<Status> statuses;
     private Context context;
+    private LayoutInflater layoutInflater;
 
     public WeiboStatusAdapter(Context context, ArrayList<Status> statuses) {
         this.context = context;
         this.statuses = statuses;
+        layoutInflater = LayoutInflater.from(context);
     }
 
     @Override
@@ -58,7 +61,7 @@ public class WeiboStatusAdapter extends BaseAdapter {
         if (view == null) {
             statusHolder = new StatusHolder();
 
-            view = LayoutInflater.from(context).inflate(R.layout.listview_item_weibo_status, null);
+            view = layoutInflater.inflate(R.layout.listview_item_weibo_status, null);
 
             convertView = view;
 
@@ -74,6 +77,7 @@ public class WeiboStatusAdapter extends BaseAdapter {
         // TextView statusContent = (TextView) view.findViewById(R.id.txt_wb_item_content);
 
         statusHolder.textViewUserScreenName = (TextView) view.findViewById(R.id.txt_wb_item_uname);
+        statusHolder.imageViewUserHead = (ImageView) view.findViewById(R.id.img_wb_item_head);
         statusHolder.textViewStatusContent = (TextView) view.findViewById(R.id.txt_wb_item_content);
         statusHolder.textViewStatusFrom = (TextView) view.findViewById(R.id.txt_wb_item_from);
         statusHolder.textViewStatusTime = (TextView) view.findViewById(R.id.txt_wb_item_time);
@@ -84,12 +88,14 @@ public class WeiboStatusAdapter extends BaseAdapter {
 
         // 昵称
         statusHolder.textViewUserScreenName.setText(status.user.screen_name);
+        // 用户头像
+        ImgLoader.show(statusHolder.imageViewUserHead, status.user.avatar_large);
         // 微博正文
         statusHolder.textViewStatusContent.setText(status.text);
         // 微博发布时间
         statusHolder.textViewStatusTime.setText(status.created_at.substring(11, 20));
         // 微博来源
-        statusHolder.textViewStatusFrom.setText("From" + Html.fromHtml(status.source));
+        statusHolder.textViewStatusFrom.setText(String.format("%s", Html.fromHtml(status.source)));
         // 转发数量
         statusHolder.textViewStatusRedirect.setText(String.valueOf(status.reposts_count));
         // 评论数量
@@ -105,6 +111,7 @@ public class WeiboStatusAdapter extends BaseAdapter {
         if (!(status.thumbnail_pic == null || Objects.equals(status.thumbnail_pic, ""))) {
             statusHolder.imageViewStatusContentPic = (ImageView) view.findViewById(R.id.img_wb_item_content_pic);
             statusHolder.imageViewStatusContentPic.setVisibility(View.VISIBLE);
+            ImgLoader.show(statusHolder.imageViewStatusContentPic, status.bmiddle_pic);
         }
 
         // 转发内容
@@ -122,6 +129,7 @@ public class WeiboStatusAdapter extends BaseAdapter {
                 statusHolder.imageViewStatusRetweetedPic =
                         (ImageView) view.findViewById(R.id.img_wb_item_content_subpic);
                 statusHolder.imageViewStatusRetweetedPic.setVisibility(View.VISIBLE);
+                ImgLoader.show(statusHolder.imageViewStatusRetweetedPic, status.retweeted_status.pic_urls.get(0));
             }
         }
 

@@ -11,7 +11,6 @@ import com.qiuyongchen.windweibo.R;
 import com.qiuyongchen.windweibo.adapter.WeiboStatusAdapter;
 import com.qiuyongchen.windweibo.bean.Task;
 import com.qiuyongchen.windweibo.logic.MainService;
-import com.sina.weibo.sdk.openapi.models.Status;
 import com.sina.weibo.sdk.openapi.models.StatusList;
 
 /**
@@ -54,10 +53,6 @@ public class HomeActivity extends Activity implements BaseActivity {
 
         // 刷新微博列表
         weiboStatusAdapter = new WeiboStatusAdapter(HomeActivity.this, ((StatusList) params[0]).statusList);
-
-        Toast.makeText(HomeActivity.this,
-                ((Status) weiboStatusAdapter.getItem(1)).text,
-                Toast.LENGTH_LONG).show();
 
         listView.setAdapter(weiboStatusAdapter);
 
