@@ -20,8 +20,8 @@ public class ImgLoader {
         view.setImageBitmap(MyApplication.asyncImgLoader.get(url, getCallback(view, url)));
     }
 
-    private static ImgLoaderCallback getCallback(final ImageView view, String url) {
-        return new ImgLoaderCallback() {
+    private static ImageLoaderCallback getCallback(final ImageView view, String url) {
+        return new ImageLoaderCallback() {
             @Override
             public void refresh(String url, Bitmap bitmap) {
                 if (Objects.equals(view.getTag().toString(), url)) {

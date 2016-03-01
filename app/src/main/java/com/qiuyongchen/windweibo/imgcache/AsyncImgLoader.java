@@ -57,7 +57,7 @@ public class AsyncImgLoader {
     /**
      * 获取一个URL对应的图片，优先从本地获得，次优先从网络下载得来。
      */
-    public Bitmap get(String url, ImgLoaderCallback imgLoaderCallback) {
+    public Bitmap get(String url, ImageLoaderCallback imgLoaderCallback) {
         Bitmap bitmap = imageManager.getLocal(url);
 
         // 本地就存在该照片
